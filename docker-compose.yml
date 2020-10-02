@@ -1,0 +1,37 @@
+version: '3.7'
+
+services:
+    api:
+        build: ./tailorie
+        command: python manage.py runserver 0.0.0.0:8000
+        volumes:
+            - ./tailorie/:/usr/src/tailorie/
+        ports:
+            - 8000:8000
+        env_file:
+            - ./.env
+        depends_on:
+            - db
+    db:
+        image: postgres:12.0-alpine
+        volumes:
+            - postgres_data:/var/lib/postgresql/data/
+            - ./postgres/init.sh:/docker-entrypoint-initdb.d/init.sh
+        environment:
+            - POSTGRES_USER=tailorie
+            - POSTGRES_PASSWORD=tailorie
+            - POSTGRES_DB=tailorie_dev
+
+    web:
+        build: ../brand-dashboard/.
+        volumes:
+            - ../tailorie_web:/usr/src/tailorie_web
+        ports:
+            - '80:4200'
+        command: >
+            bash -c "npm install && npm update && ng serve --host 0.0.0.0 --port 4200"
+        depends_on:
+          - api
+
+volumes:
+    postgres_data:
