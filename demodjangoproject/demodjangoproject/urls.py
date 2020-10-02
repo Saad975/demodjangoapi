@@ -24,7 +24,7 @@ urlpatterns = [
 
     path('api/v1/', include('users.urls')),
 
-    path('api-token-auth/', obtain_jwt_token),
-    path('api-token-refresh/', refresh_jwt_token),
-    path('api-token-verify/', verify_jwt_token),
+    path('api-token-auth/', obtain_jwt_token, name='api-token-auth'),
+    path('api-token-refresh/', refresh_jwt_token, name='api-token-refresh'),
+    path('api-token-verify/', verify_jwt_token, name='api-token-verify'),
 ]
